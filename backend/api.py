@@ -1,24 +1,16 @@
-from typing import Dict
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from lang import Model
 from fastapi.middleware.cors import CORSMiddleware
 from models import Response, Request
 
-# class Request(BaseModel):
-#     html: str
-#     query: str
-#     history: str
-
 
 app = FastAPI()
-model: Model = None
 
 origins = [
-    "http://localhost:8000",  # Allow localhost during development
+    "http://localhost:8000",
     "http://localhost:5173",
     "http://yourfrontenddomain.com",
-    # Add any other frontend addresses from where you want to allow requests
 ]
 
 app.add_middleware(
@@ -41,13 +33,49 @@ def read_health():
     return {"status": "healthy"}
 
 
-@app.post("/process_response", response_model=Response)
-async def process_html(data: Request):
+@app.post("/first_response/")
+async def first_response(data: Request) -> Response:
+    query = ""
+    try:
+        if data.query == "ok":
+            with open("ok.html", "r") as f:
+                res = {
+                    "type": "N",
+                    "id": "",
+                    "html": f.read(),
+                }
+                return Response(
+                    type=res["type"],
+                    id=res["id"],
+                    html=res["html"],
+                    history=f"\nHuman:Help me design a good looking bakery website\n",
+                )
+
+        if data.history:
+            query = f"""Element: {data.html}`
+            Query: {data.query}"""
+            print("senior dev")
+            return model.junior_dev(query, data.history)
+        else:
+            query = data.query
+            print("design dev")
+            return model.design_dev(query, data.history)
+
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=f"Something went wrong: {e}")
+
+
+@app.post("/fix_shit/")
+async def fix_shit(data: Request) -> Response:
     query = ""
     if data.html:
         query = f"""Element: {data.html}
         Query: {data.query}"""
     else:
         query = data.query
-
-    return model.run(query, data.history)
+    try:
+        return model.junior_dev(query, data.history)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=f"Something went wrong: {e}")

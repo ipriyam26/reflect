@@ -11,3 +11,6 @@ class Response(BaseModel):
     id: str 
     html: str
     history: str 
+
+class Error(BaseModel):
+    detail: str

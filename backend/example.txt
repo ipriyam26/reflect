@@ -1,0 +1,34 @@
+AI: Sports News Website: Live News & Blogs
+Color Scheme:
+Primary: .bg-blue-600 for backgrounds and .text-blue-600 for text.
+Secondary: .bg-gray-100 for backgrounds and .text-gray-700 for text.
+Accent: .bg-yellow-500 for backgrounds and .text-yellow-500 for text.
+
+1. Navigation Bar:
+Background: .bg-blue-600
+Logo: On the left, using .text-3xl .font-bold .text-white
+Menu Items: Center-aligned, using .text-base .font-medium .text-white .hover:text-yellow-500
+Search Bar: On the right, input field with .bg-gray-100 .rounded-md .pl-2, and a search icon using .text-blue-600
+
+2. Hero Section:
+Background: .bg-gray-100
+Title: Centered, using .text-4xl .font-bold .text-blue-600
+Subtitle: Below the title, using .text-2xl .font-medium .text-gray-700
+Image/Video: Full width below subtitle.
+CTA Button: Below the image, using .bg-yellow-500 .rounded-md .text-white .px-4 .py-2
+
+
+3. Blog Section:
+Title: .text-3xl .font-bold .text-blue-600
+Blog Cards: 2 cards .p-2 .drop-shadow-md .rounded-md .bg-white
+Image: Left-aligned, 1/3 width of card.
+Title: Next to the image, using .text-xl .font-bold .text-gray-700
+Short Description: Below the title, .text-base .text-gray-500
+Author and Date: At the bottom of card, using .text-sm .text-gray-600
+
+4. Footer:
+Background: .bg-blue-600
+Logo: Centered, using .text-2xl .font-bold .text-white
+Links: Below the logo, using .text-base .font-medium .text-gray-100 .hover:text-yellow-500
+Social Media Icons: At the bottom, using .text-white .hover:text-yellow-500
+This design ensures an intuitive flow of information, making it easy for visitors to access the latest sports news and blogs. The chosen color scheme offers a dynamic yet professional appearance, in line with the theme of sports news.
