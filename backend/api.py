@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 
 from lang import Model
 from fastapi.middleware.cors import CORSMiddleware
-from models import Response, Request
+from models import Action, Response, Request
 
 
 app = FastAPI()
@@ -45,9 +45,7 @@ async def first_response(data: Request) -> Response:
                     "html": f.read(),
                 }
                 return Response(
-                    type=res["type"],
-                    id=res["id"],
-                    html=res["html"],
+                    actions=[Action(**res)],
                     history=f"\nHuman:Help me design a good looking bakery website\n",
                 )
 

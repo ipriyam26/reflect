@@ -39,7 +39,7 @@ Use this as placeholder for images : https://placehold.co/{width}x{height} suppl
 Only way to coding the live website is by using the code you provide. Which is parsed using a script. So make sure you provide the best code possible.
 DON'T but anything in html THAT CANNOT BE DONE BY a dumb SCRIPT. Based on your response using the "type" & "id" the script will inject the code into the current html.
 
-MAKE ALL THE CHANGES IN ONE OPERATION. i.e only one object should be sent back script cannot handle multiple.
+You reply with tasks, and the script will do it. It is executed top down. So make sure you reply with the correct order of tasks.
 
 {{format_instructions}}
 
@@ -123,5 +123,3 @@ This design ensures an intuitive flow of information, making it easy for visitor
 
 Human: {{query}}
 AI:"""
-
-
