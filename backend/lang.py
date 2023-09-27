@@ -1,8 +1,9 @@
 from pprint import pprint
+import re
 from typing import List
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from utils import SeniorDevExampleSelector, parse_json_string
+from utils import SeniorDevExampleSelector, parse_json_string, trim_history
 from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 from langchain.pydantic_v1 import BaseModel, Field
@@ -69,46 +70,44 @@ class Model:
         self.senior_dev_chain = LLMChain(
             llm=chat,
             prompt=senior_developer_prompt,
-            verbose=True,
-            # memory=memory,
         )
 
         self.junior_dev_chain = LLMChain(
             llm=fix,
             prompt=junior_developer_prompt,
-            # verbose=True,
         )
 
         self.designer_chain = LLMChain(
             llm=chat,
             prompt=designer_prompt,
-            # verbose=True,
         )
 
+    @trim_history
     def design_dev(self, query: str, history: str = "") -> Response:
         designer_response = self.designer_chain.run(query=query)
         developer_repsonse = self.senior_dev_chain.run(
             query=designer_response,
             history="",
         )
+        return self.format(history, query, developer_repsonse)
 
-        return self.add_history_format(history, query, developer_repsonse)
-
+    @trim_history
     def senior_dev(self, query: str, history: str) -> Response:
         response = self.senior_dev_chain.run(
             query=query,
             history=history,
         )
-        return self.add_history_format(history, query, response)
+        return self.format(history, query, response)
 
+    @trim_history
     def junior_dev(self, query: str, history: str) -> Response:
         response = self.junior_dev_chain.run(
             query=query,
             history=history,
         )
-        return self.add_history_format(history, query, response)
+        return self.format(history, query, response)
 
-    def add_history_format(self, history: str, query: str, response: str) -> Response:
+    def format(self, history: str, query: str, response: str) -> Response:
         history = f"{history}\nHuman:{query}\nAI:{response}\n"
         return parse_json_string(response, history)
 

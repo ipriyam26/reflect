@@ -1,7 +1,9 @@
+from functools import wraps
+from pprint import pprint
 import re
 from langchain.prompts.example_selector.base import BaseExampleSelector
 import json
-from typing import Dict, List
+from typing import Any, Dict, List
 import numpy as np
 
 from models import Action, Response
@@ -29,17 +31,52 @@ class SeniorDevExampleSelector(BaseExampleSelector):
         return f"Human: {key}\nAI: {value}"
 
 
+def extract_json_objects(s: str):
+    depth = 0
+    obj = ""
+    for char in s:
+        if char == "{":
+            depth += 1
+        if depth > 0:
+            obj += char
+        if char == "}":
+            depth -= 1
+            if depth == 0:
+                yield obj
+                obj = ""
+
+
 def parse_json_string(json_string: str, history: str) -> Response:
     # Extract all valid JSON objects using regex
-    json_objects_strs = re.findall(
-        r'\{\s*"type"\s*:\s*"[^"]*"\s*,\s*"id"\s*:\s*"[^"]*"\s*,\s*"html"\s*:\s*"[^"]*"\s*\}',
-        json_string,
-    )
-
-    # Convert extracted JSON strings to dictionaries
-    json_objects = [json.loads(j_obj_str) for j_obj_str in json_objects_strs]
-
+    valid_jsons = [
+        json_str
+        for json_str in extract_json_objects(json_string)
+        if '"type"' in json_str and '"id"' in json_str and '"html"' in json_str
+    ]
+    json_objects = [json.loads(j_obj_str) for j_obj_str in valid_jsons]
+    pprint(json_objects)
     return Response(
         actions=[Action(**json_object) for json_object in json_objects],
         history=history,
     )
+
+
+def trim_history(func):
+    @wraps(func)
+    def wrapper(self, query: str, history: str, *args, **kwargs) -> Any:
+        total_length = len(history)
+
+        if total_length <= 2000:
+            return func(self, query, history, *args, **kwargs)
+
+        split_list = re.split("Human|AI", history)
+
+        while total_length > 2000:
+            removed_element = split_list.pop(0)
+            total_length -= len(removed_element)
+
+        trimmed_history = "".join(split_list)
+
+        return func(self, query, trimmed_history, *args, **kwargs)
+
+    return wrapper
