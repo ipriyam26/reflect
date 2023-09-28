@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "reflect-backend"
+name = "backend"
 version = "0.1.0"
 description = ""
 authors = ["Priyam Srivastava <ipriyam26@gmail.com>"]

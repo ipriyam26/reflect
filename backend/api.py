@@ -10,7 +10,6 @@ app = FastAPI()
 origins = [
     "http://localhost:8000",
     "http://localhost:5173",
-    "http://yourfrontenddomain.com",
 ]
 
 app.add_middleware(
@@ -25,7 +24,6 @@ app.add_middleware(
 # @app.on_event("startup")
 # async def startup_event():
 #     global model
-model = Model()
 
 
 @app.get("/health")
@@ -35,6 +33,7 @@ def read_health():
 
 @app.post("/first_response/")
 async def first_response(data: Request) -> Response:
+    model = Model()
     query = ""
     try:
         if data.query == "ok":
@@ -66,6 +65,7 @@ async def first_response(data: Request) -> Response:
 
 @app.post("/fix_shit/")
 async def fix_shit(data: Request) -> Response:
+    model = Model()
     query = ""
     if data.html:
         query = f"""Element: {data.html}

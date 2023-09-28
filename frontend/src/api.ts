@@ -1,13 +1,14 @@
 import type { APIResponse, Task } from "./types";
-import { sandboxContent, showLoading, history } from "./store";
+import { history } from "./store";
 import { get } from "svelte/store";
+const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 async function firstCall(requestData: {
   html: string;
   query: string;
   history: string;
 }) {
-  const reply = await fetch("http://127.0.0.1:8000/first_response", {
+  const reply = await fetch(`${apiUrl}/first_response`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +23,7 @@ async function fixShit(requestData: {
   query: string;
   history: string;
 }) {
-  return await fetch("http://127.0.0.1:8000/fix_shit", {
+  return await fetch(`${apiUrl}/fix_shit`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
