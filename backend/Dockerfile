@@ -9,9 +9,7 @@ WORKDIR /app
 
 
 # Install the Python dependencies
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev
+RUN pip install -r req.txt
 
 # Expose port 8000 for FastAPI
 EXPOSE 8000
